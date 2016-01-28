@@ -1,0 +1,52 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iris-polymer-importer/iris-importer.html">
+
+<dom-module id="iris-clock">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div class="clock-time">
+      [[clock.time]]
+    </div>
+    <div class="clock-date">
+      [[clock.date]]
+    </div>
+  </template>
+  <script>
+    'use strict'
+
+    Polymer({
+      is: 'iris-clock',
+      properties: {
+        timezone: {
+          type: String
+        },
+        currentTime: {
+          type: String
+        }
+      },
+      observers: ['_timeSet(currentTime,timezone)'],
+      _timeSet(currentTime, timezone) {
+        let time = moment(currentTime).tz(timezone).valueOf();
+        window.t = moment(currentTime).tz(timezone);
+
+        this.offset = Date.now() - time;
+        console.log(currentTime, timezone);
+        console.log(Date.now() - time);
+      },
+      ready() {
+        this.clock = {};
+        this.update();
+        setInterval(this.update.bind(this), 1000);
+      },
+      update() {
+        let now = moment(Date.now() - this.offset).tz(this.timezone);
+        this.set('clock.time', now.format('H : mm'))
+        this.set('clock.date', now.format('D MMM ddd'))
+      }
+    });
+  </script>
+</dom-module>
