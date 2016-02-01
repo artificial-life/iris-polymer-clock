@@ -58,6 +58,7 @@
         setInterval(this.update.bind(this), 1000);
       },
       update() {
+        if (_.isUndefined(this.offset)) return
         let now = moment(Date.now() - this.offset).tz(this.timezone);
         this.set('clock.time', now.format('H : mm'))
         this.set('clock.date', now.format('D MMM ddd'))
