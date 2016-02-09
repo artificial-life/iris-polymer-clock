@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iris-polymer-importer/iris-importer.html">
+<link rel="import" href="../../bower_components/iris-polymer-api/iris-shared-entities.html">
 
 <dom-module id="iris-clock">
   <template>
@@ -23,6 +24,7 @@
         color: var(--mydoc-red-800);
       }
     </style>
+    <iris-shared-entities id="timezone" namespace="timezone"></iris-shared-entities>
     <div class="clock-time">
       [[clock.time]]
     </div>
@@ -35,23 +37,12 @@
 
     Polymer({
       is: 'iris-clock',
-      properties: {
-        timezone: {
-          type: String
-        },
-        currentTime: {
-          type: String
-        }
-      },
-      observers: ['_timeSet(currentTime,timezone)'],
-      _timeSet(currentTime, timezone) {
-        let time = moment(currentTime).tz(timezone).valueOf();
-        window.t = moment(currentTime).tz(timezone);
 
-        this.offset = Date.now() - time;
-      },
       ready() {
         this.clock = {};
+        this.offset = this.$.timezone.get('offset');
+        this.timezone = this.$.timezone.get('name');
+
         this.update();
         setInterval(this.update.bind(this), 1000);
       },
