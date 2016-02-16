@@ -24,7 +24,9 @@
         color: var(--mydoc-red-800);
       }
     </style>
-    <iris-shared-entities id="timezone" namespace="timezone"></iris-shared-entities>
+    <iris-shared-entities namespace="timezone" key="offset" value="{{offset}}"></iris-shared-entities>
+    <iris-shared-entities namespace="timezone" key="name" value="{{timezone}}"></iris-shared-entities>
+
     <div class="clock-time">
       [[clock.time]]
     </div>
@@ -37,17 +39,14 @@
 
     Polymer({
       is: 'iris-clock',
-
       ready() {
         this.clock = {};
-        this.offset = this.$.timezone.get('offset');
-        this.timezone = this.$.timezone.get('name');
 
         this.update();
         setInterval(this.update.bind(this), 1000);
       },
       update() {
-        if (_.isUndefined(this.offset)) return
+        if (_.isUndefined(this.offset) || _.isUndefined(this.timezone)) return
         let now = moment(Date.now() - this.offset).tz(this.timezone);
         this.set('clock.time', now.format('H : mm'))
         this.set('clock.date', now.format('D MMM ddd'))
