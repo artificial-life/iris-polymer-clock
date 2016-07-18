@@ -11,29 +11,43 @@
         @apply(--user-select-none);
         cursor: default;
       }
-      
+
       div {
         text-align: var(--clock-text-align, end);
       }
-      
+
       .clock-time {
         font-size: var(--iris-clock-time-font-size, 42px);
-        color: var(--mydoc-brown-1000);
+        color: var(--clock-time-color, --mydoc-brown-1000);
       }
-      
+
       .clock-date {
         font-size: var(--iris-clock-date-font-size, 36px);
-        color: var(--mydoc-red-800);
+        color: var(--clock-date-color, --mydoc-red-800);
+      }
+
+      .flat {
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+      }
+
+      .reverse {
+        @apply(--layout-vertical-reverse);
+      }
+
+      .flat.reverse {
+        @apply(--layout-horizontal-reverse);
       }
     </style>
     <iris-shared-entities namespace="timezone" key="offset" value="{{offset}}"></iris-shared-entities>
     <iris-shared-entities namespace="timezone" key="name" value="{{timezone}}"></iris-shared-entities>
-
-    <div class="clock-time">
-      [[clock.time]]
-    </div>
-    <div class="clock-date">
-      [[clock.date]]
+    <div class$="[[calcAlign(flat,reverse)]]">
+      <div class="clock-time">
+        [[clock.time]]
+      </div>
+      <div class="clock-date">
+        [[clock.date]]
+      </div>
     </div>
   </template>
   <script>
@@ -41,6 +55,22 @@
 
     Polymer({
       is: 'iris-clock',
+      properties: {
+        flat: {
+          type: Boolean,
+          value: false
+        },
+        reverse: {
+          type: Boolean,
+          value: false
+        }
+      },
+      calcAlign(flat, reverse) {
+        let classes = [];
+        flat && classes.push('flat');
+        reverse && classes.push('reverse');
+        return classes.join(' ');
+      },
       ready() {
         this.clock = {};
 
