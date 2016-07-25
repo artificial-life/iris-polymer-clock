@@ -66,7 +66,7 @@
         },
         dateFormat: {
           type: String,
-          value: 'D MMM dd'
+          value: 'D MMM ddd'
         }
       },
       calcAlign(flat, reverse) {
@@ -84,8 +84,8 @@
       update() {
         if (_.isUndefined(this.offset) || _.isUndefined(this.timezone)) return
         let now = moment(Date.now() - this.offset).tz(this.timezone);
-        this.set('clock.time', now.format('H : mm'))
-        this.set('clock.date', now.format(this.dateFormat))
+        this.set('clock.time', now.format('H : mm'));
+        this.set('clock.date', now.format(this.dateFormat));
       }
     });
   </script>
