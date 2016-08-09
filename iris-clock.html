@@ -42,10 +42,10 @@
     <iris-shared-entities namespace="timezone" key="offset" value="{{offset}}"></iris-shared-entities>
     <iris-shared-entities namespace="timezone" key="name" value="{{timezone}}"></iris-shared-entities>
     <div class$="[[calcAlign(flat,reverse)]]">
-      <div class="clock-time">
+      <div hidden$="[[isHidden(timeFormat)]]" class="clock-time">
         [[clock.time]]
       </div>
-      <div class="clock-date">
+      <div hidden$="[[isHidden(dateFormat)]]" class="clock-date">
         [[clock.date]]
       </div>
     </div>
@@ -67,7 +67,14 @@
         dateFormat: {
           type: String,
           value: 'D MMM ddd'
+        },
+        timeFormat: {
+          type: String,
+          value: 'H:mm'
         }
+      },
+      isHidden(format) {
+        return format === "";
       },
       calcAlign(flat, reverse) {
         let classes = [];
@@ -84,7 +91,7 @@
       update() {
         if (_.isUndefined(this.offset) || _.isUndefined(this.timezone)) return
         let now = moment(Date.now() - this.offset).tz(this.timezone);
-        this.set('clock.time', now.format('H : mm'));
+        this.set('clock.time', now.format(this.timeFormat));
         this.set('clock.date', now.format(this.dateFormat));
       }
     });
